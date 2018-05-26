@@ -1,22 +1,22 @@
 package com.example.asafkorem.imgur;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import com.bumptech.glide.Glide;
 
 import java.util.concurrent.ExecutionException;
 
@@ -73,13 +73,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void failure(RetrofitError error) {
-        // On error toast failure message
-        Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "FAILED LOADING IMAGES:" + error.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class GliderTask extends AsyncTask<String, Void, Integer> {
         Context context;
-        public GliderTask(Context context) {
+        GliderTask(Context context) {
             this.context = context;
         }
         @Override
@@ -92,9 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .asBitmap().into(-1, -1).get();
                     adapter.setImage(position, bitmap);
                     position++;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(Integer integer) {
             adapter.notifyDataSetChanged();
-            Toast.makeText(MainActivity.this, "Loaded!", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "SUCCESS LOADING IMAGES!", Toast.LENGTH_LONG).show();
         }
     }
 }
